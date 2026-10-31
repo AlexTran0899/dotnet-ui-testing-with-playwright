@@ -17,11 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../EAWebApp/EAWebApp.csproj" />
-    <ProjectReference Include="../ProductAPI/ProductAPI.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Using Include="Xunit" />
   </ItemGroup>
 

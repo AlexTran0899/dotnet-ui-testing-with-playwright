@@ -1,4 +1,3 @@
-using Microsoft.CodeAnalysis.Options;
 using Microsoft.Playwright;
 
 public class PlaywrightDriver : IAsyncLifetime
@@ -20,6 +19,7 @@ public class PlaywrightDriver : IAsyncLifetime
 
         _playwright.Dispose();
     }
+
     public async Task<IBrowserContext> CreateContextAsync(
      BrowserTypeLaunchOptions options)
     {

@@ -1,10 +1,9 @@
-﻿using System.Threading.Channels;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Threading.Channels;
 using Microsoft.Playwright;
-using NuGet.Packaging.Signing;
-using SQLitePCL;
-
 namespace ui_test;
 
+using static Microsoft.Playwright.Assertions;
 public class UnitTest1 : IAsyncLifetime, IClassFixture<PlaywrightDriver>
 {
     private PlaywrightDriver _driver = null!;
@@ -22,6 +21,7 @@ public class UnitTest1 : IAsyncLifetime, IClassFixture<PlaywrightDriver>
             .Headless(false);
         _context = await _driver.CreateContextAsync(options);
         _page = await _context.NewPageAsync();
+
     }
 
     public async Task DisposeAsync()
@@ -30,15 +30,62 @@ public class UnitTest1 : IAsyncLifetime, IClassFixture<PlaywrightDriver>
     }
 
     [Fact]
-    public async Task Test1()
+    public async Task TestWebsite()
     {
-        await _page.GotoAsync("https://www.google.com");
+        await _page.GotoAsync("https://www.alextranwebsite.com/");
+
+        // Verify headings
+        await AssertClickableAsync(_page.GetByRole(
+            AriaRole.Heading,
+            new() { Name = "👋 Howdy" }
+        ));
+
+        // Verify description
+        await AssertClickableAsync(_page.GetByText(
+            "I build web and mobile apps"
+        ));
+
+        // Verify navigation buttons
+        await AssertClickableAsync(_page.GetByRole(
+            AriaRole.Button,
+            new() { Name = " Github" }
+        ));
+
+        await AssertClickableAsync(_page.GetByRole(
+            AriaRole.Button,
+            new() { Name = " Résumé" }
+        ));
+
+        await AssertClickableAsync(_page.GetByRole(
+            AriaRole.Button,
+            new() { Name = " Leetcode" }
+        ));
+
+        // Verify profile image
+        await AssertClickableAsync(_page.GetByRole(
+            AriaRole.Img,
+            new() { Name = "picture of Alex Tran" }
+        ));
+
+        // Verify Niagara Falls heading
+        await AssertClickableAsync(_page.GetByRole(
+            AriaRole.Heading,
+            new() { Name = "Alex at Niagara Falls" }
+        ));
     }
 
-    [Fact]
-    public async Task Test2()
+    private static async Task AssertClickableAsync(ILocator element)
     {
-        await _page.GotoAsync("https://www.google.com");
+        await Expect(element).ToBeVisibleAsync();
+        await Expect(element).ToBeEnabledAsync();
 
+        // Verify clickability without actually clicking
+        // await element.ClickAsync(new()
+        // {
+        //     Trial = true
+        // });
+
+        await element.ClickAsync();
     }
 }
+
